@@ -1,0 +1,17 @@
+
+*.class
+
+
+.vscode/
+
+
+.idea/
+*.iml
+
+
+/out/
+bin/
+
+
+.DS_Store
+Thumbs.db
