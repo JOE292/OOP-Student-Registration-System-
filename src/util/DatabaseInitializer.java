@@ -1,0 +1,40 @@
+package util;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+public class DatabaseInitializer {
+    public static void createTables(Connection conn) throws SQLException {
+        try (Statement stmt = conn.createStatement()) {
+            stmt.executeUpdate(
+                    "CREATE TABLE IF NOT EXISTS students (" +
+                            "  studentId INT AUTO_INCREMENT PRIMARY KEY, " +
+                            "  name VARCHAR(255) NOT NULL, " +
+                            "  email VARCHAR(255) NOT NULL, " +
+                            "  major VARCHAR(100) NOT NULL" +
+                            ");"
+            );
+
+            stmt.executeUpdate(
+                    "CREATE TABLE IF NOT EXISTS courses (" +
+                            "  courseId VARCHAR(50) PRIMARY KEY, " +
+                            "  title VARCHAR(255) NOT NULL, " +
+                            "  instructor VARCHAR(255) NOT NULL, " +
+                            "  creditHours INT NOT NULL" +
+                            ");"
+            );
+
+            stmt.executeUpdate(
+                    "CREATE TABLE IF NOT EXISTS registrations (" +
+                            "  registrationId INT AUTO_INCREMENT PRIMARY KEY, " +
+                            "  studentId INT NOT NULL, " +
+                            "  courseId VARCHAR(50) NOT NULL, " +
+                            "  registrationDate DATETIME NOT NULL, " +
+                            "  FOREIGN KEY (studentId) REFERENCES students(id), " +
+                            "  FOREIGN KEY (courseId)  REFERENCES courses(courseId)" +
+                            ");"
+            );
+        }
+    }
+}
