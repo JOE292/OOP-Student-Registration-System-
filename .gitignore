@@ -4,6 +4,10 @@
 
 .vscode/
 
+.exports/
+*.txt
+*.log
+
 
 .idea/
 *.iml
