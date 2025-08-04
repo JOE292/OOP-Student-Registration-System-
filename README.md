@@ -45,23 +45,24 @@ OOP project/
 ### Prerequisites
 
 - Java JDK 11 or above
-- MySQL Server
+- **XAMPP** (to run MySQL locally)
 - An IDE (e.g., IntelliJ IDEA or Eclipse, Vs-Code)
 
 ### Setup Instructions
 
 1. Clone the repository.
-2. Add the MySQL Connector JAR from `libs/` to your project libraries (already included in the Repo).
-3. Configure your database credentials in `config.properties` but it will work as is.
+2. Start Apache and MySQL via **XAMPP Control Panel** [Download XAMMP](https://nodejs.org](https://sourceforge.net/projects/xampp/files/XAMPP%20Windows/8.2.12/xampp-windows-x64-8.2.12-0-VS16-installer.exe))
+3. Add the MySQL Connector JAR from `libs/` to your project libraries (already included in the Repo).
+4. Configure your database credentials in `config.properties` but it will work as is.
  
-4. Run the Javac As:
+5. Run the Javac As:
 
     ```bash
     for /R "src" %F in (*.java) do javac -cp "libs\mysql-connector-j-9.4.0.jar;out" -d out "%F"
 
     ```
 
-5.Start the app from MAIN.
+6.Start the app from MAIN.
 
     java -cp "libs/mysql-connector-j-9.4.0.jar;out" MAIN
 
