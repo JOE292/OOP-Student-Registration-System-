@@ -1,10 +1,18 @@
 package util;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
 public class DatabaseInitializer {
+    public static void createDatabaseIfNotExists(String dbName, String user, String pass) throws SQLException {
+        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/", user, pass);
+             Statement stmt = conn.createStatement()) {
+            stmt.executeUpdate("CREATE DATABASE IF NOT EXISTS " + dbName);
+        }
+    }
+
     public static void createTables(Connection conn) throws SQLException {
         try (Statement stmt = conn.createStatement()) {
             stmt.executeUpdate(
@@ -31,7 +39,7 @@ public class DatabaseInitializer {
                             "  studentId INT NOT NULL, " +
                             "  courseId VARCHAR(50) NOT NULL, " +
                             "  registrationDate DATETIME NOT NULL, " +
-                            "  FOREIGN KEY (studentId) REFERENCES students(id), " +
+                            "  FOREIGN KEY (studentId) REFERENCES students(studentId), " +
                             "  FOREIGN KEY (courseId)  REFERENCES courses(courseId)" +
                             ");"
             );

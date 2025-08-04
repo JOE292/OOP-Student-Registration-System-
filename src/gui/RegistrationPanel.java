@@ -5,6 +5,7 @@ import DAO.StudentDAO;
 import DAO.CourseDAO;
 import model.Registration;
 import model.Student;
+import util.Exporter;
 import model.Course;
 
 import javax.swing.*;
@@ -13,6 +14,7 @@ import javax.swing.event.PopupMenuListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.time.LocalDate;
+import java.util.List;
 
 public class RegistrationPanel extends JPanel {
 
@@ -57,6 +59,7 @@ public class RegistrationPanel extends JPanel {
 
         JButton registerButton = new JButton("Register");
         JButton deleteButton = new JButton("Delete Selected");
+        JButton exportStudentButton = new JButton("Export Selected Student");
 
         formPanel.add(new JLabel("Student:"));
         formPanel.add(studentComboBox);
@@ -95,6 +98,29 @@ public class RegistrationPanel extends JPanel {
             } catch (Exception ex) {
                 ex.printStackTrace();
                 JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage());
+            }
+        });
+
+          exportStudentButton.addActionListener(e -> {
+            Student selectedStudent = (Student) studentComboBox.getSelectedItem();
+
+            if (selectedStudent == null) {
+                JOptionPane.showMessageDialog(this, "Please select a student from the dropdown.");
+                return;
+            }
+
+            int studentId = selectedStudent.getStudentId();
+
+            try {
+                
+                List<Course> courses = registrationDAO.getCoursesByStudentId(studentId);
+
+                Exporter.exportStudentWithCourses(selectedStudent, courses);
+
+                JOptionPane.showMessageDialog(this, "Exported to student_" + studentId + ".txt successfully.");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Export failed: " + ex.getMessage());
             }
         });
 
