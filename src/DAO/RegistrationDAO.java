@@ -88,10 +88,10 @@ public class RegistrationDAO {
         List<Registration> regs = new ArrayList<>();
         String sql =
                 "SELECT r.registrationId, r.registrationDate, " +
-                        "       s.id AS studentId, s.name, s.email, s.major, " +
+                        "       s.studentId AS studentId, s.name, s.email, s.major, " +
                         "       c.courseId, c.title, c.instructor, c.creditHours " +
                         "FROM registrations r " +
-                        "JOIN students s ON r.studentId = s.id " +
+                        "JOIN students s ON r.studentId = s.studentId " +
                         "JOIN courses  c ON r.courseId  = c.courseId";
 
         try (Statement stmt = connection.createStatement();
@@ -118,6 +118,34 @@ public class RegistrationDAO {
             }
         }
         return regs;
+    }
+
+
+    public List<Course> getCoursesByStudentId(int studentId) throws SQLException {
+        List<Course> courses = new ArrayList<>();
+
+        String sql =
+                "SELECT c.courseId, c.title, c.instructor, c.creditHours " +
+                        "FROM registrations r " +
+                        "JOIN courses c ON r.courseId = c.courseId " +
+                        "WHERE r.studentId = ?";
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, studentId);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    Course course = new Course(
+                            resultSet.getInt("courseId"),
+                            resultSet.getString("title"),
+                            resultSet.getString("instructor"),
+                            resultSet.getInt("creditHours")
+                    );
+                    courses.add(course);
+                }
+            }
+        }
+
+        return courses;
     }
 
     public void deleteById(int registrationId) throws SQLException {
@@ -153,7 +181,7 @@ public class RegistrationDAO {
         String sql = "DELETE FROM registrations WHERE courseId = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, courseId);
-            return stmt.executeUpdate(); 
+            return stmt.executeUpdate(); // returns number of rows deleted
         } catch (Exception e) {
             e.printStackTrace();
             return 0;
