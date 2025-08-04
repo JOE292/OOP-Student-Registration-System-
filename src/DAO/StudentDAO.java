@@ -36,13 +36,13 @@ public class StudentDAO {
 
 
     public Student findById(int id) throws SQLException {
-        String sql = "SELECT id, name, email, major FROM students WHERE id = ?";
+        String sql = "SELECT id, name, email, major FROM students WHERE studentId = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, id);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
                     return new Student(
-                            rs.getInt("id"),
+                            rs.getInt("studentId"),
                             rs.getString("name"),
                             rs.getString("email"),
                             rs.getString("major")
@@ -54,7 +54,7 @@ public class StudentDAO {
     }
 
     public boolean studentExists(int id) throws SQLException {
-        String sql = "SELECT 1 FROM students WHERE id = ?";
+        String sql = "SELECT 1 FROM students WHERE studentId = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, id);
             try (ResultSet rs = stmt.executeQuery()) {
@@ -76,7 +76,7 @@ public class StudentDAO {
             ResultSet resultSet = statement.executeQuery(sql);
             while (resultSet.next()) {
                 Student s = new Student(
-                        resultSet.getInt("id"),
+                        resultSet.getInt("studentId"),
                         resultSet.getString("name"),
                         resultSet.getString("email"),
                         resultSet.getString("major")
@@ -88,7 +88,7 @@ public class StudentDAO {
     }
 
     public void updateStudent(Student student) throws SQLException {
-        String sql = "UPDATE students SET name = ?, email = ?, major = ? WHERE id = ?";
+        String sql = "UPDATE students SET name = ?, email = ?, major = ? WHERE studentId = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, student.getName());
             statement.setString(2, student.getEmail());
@@ -99,7 +99,7 @@ public class StudentDAO {
     }
 
     public void deleteById(int id) throws SQLException {
-        String sql = "DELETE FROM students WHERE id = ?";
+        String sql = "DELETE FROM students WHERE studentId = ?";
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, id);
             stmt.executeUpdate();
