@@ -69,6 +69,7 @@ public class RegistrationPanel extends JPanel {
         JPanel buttonPanel = new JPanel();
         buttonPanel.add(registerButton);
         buttonPanel.add(deleteButton);
+        buttonPanel.add(exportStudentButton);
 
         tableModel = new DefaultTableModel(new Object[]{"Student Name", "Course Title", "Date"}, 0);
         JTable table = new JTable(tableModel);

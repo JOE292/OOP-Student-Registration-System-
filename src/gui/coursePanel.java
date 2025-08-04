@@ -111,6 +111,7 @@ public class coursePanel extends JPanel {
                 Course c = new Course(courseId, newTitle, newInstructor, newCredits);
                 courseDAO.updateCourse(c);
                 refreshCourseTable();
+                registrationPanel.refreshTable();
             } catch (NumberFormatException ex) {
                 JOptionPane.showMessageDialog(this, "Credits must be a number");
             } catch (Exception ex) {

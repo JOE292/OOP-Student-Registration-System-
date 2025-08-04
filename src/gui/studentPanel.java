@@ -14,10 +14,12 @@ public class studentPanel extends JPanel {
     private final StudentDAO studentDAO;
     private final RegistrationDAO registrationDAO;
     private final DefaultTableModel tableModel;
+    private final RegistrationPanel registrationPanel;
 
-    public studentPanel(StudentDAO studentDAO, RegistrationDAO registrationDAO) {
+    public studentPanel(StudentDAO studentDAO, RegistrationDAO registrationDAO,RegistrationPanel registrationPanel) {
         this.studentDAO = studentDAO;
         this.registrationDAO=registrationDAO;
+        this.registrationPanel = registrationPanel;
         setLayout(new BorderLayout());
 
 
@@ -42,7 +44,7 @@ public class studentPanel extends JPanel {
         formPanel.add(deleteButton);
 
 
-        tableModel = new DefaultTableModel(new Object[]{"ID", "Name", "Email", "Major"}, 0);
+        tableModel = new DefaultTableModel(new Object[]{"Student ID", "Name", "Email", "Major"}, 0);
         JTable table = new JTable(tableModel);
         JScrollPane tableScrollPane = new JScrollPane(table);
         add(tableScrollPane, BorderLayout.CENTER);
@@ -124,32 +126,6 @@ public class studentPanel extends JPanel {
         deleteButton.addActionListener(e -> {
             int selectedRow = table.getSelectedRow();
             if (selectedRow == -1) {
-                JOptionPane.showMessageDialog(this, "Select a student to delete");
-                return;
-            }
-
-            int id = (int) tableModel.getValueAt(selectedRow, 0);
-            int confirm = JOptionPane.showConfirmDialog(this,
-                    "Are you sure you want to delete student ID " + id + "?",
-                    "Confirm Deletion", JOptionPane.YES_NO_OPTION);
-
-            if (confirm == JOptionPane.YES_OPTION) {
-                try {
-                    studentDAO.deleteById(id);
-                    refreshStudentTable();
-                    nameField.setText("");
-                    emailField.setText("");
-                    majorField.setText("");
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                    JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage());
-                }
-            }
-        });
-
-        deleteButton.addActionListener(e -> {
-            int selectedRow = table.getSelectedRow();
-            if (selectedRow == -1) {
                 JOptionPane.showMessageDialog(this, "Please select a student to delete.");
                 return;
             }
@@ -164,6 +140,7 @@ public class studentPanel extends JPanel {
                     registrationDAO.deleteByStudentId(studentId);
                     studentDAO.deleteById(studentId);
                     refreshStudentTable();
+                    registrationPanel.refreshTable();
                 } catch (Exception ex) {
                     ex.printStackTrace();
                     JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage());

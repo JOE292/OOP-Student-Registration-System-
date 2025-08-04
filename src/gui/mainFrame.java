@@ -24,7 +24,7 @@ public class mainFrame extends JFrame {
             RegistrationPanel registrationPanel = new RegistrationPanel(registrationDAO, studentDAO, courseDAO);
 
             JTabbedPane tabbedPane = new JTabbedPane();
-            tabbedPane.addTab("Students", new studentPanel(studentDAO, registrationDAO));
+            tabbedPane.addTab("Students", new studentPanel(studentDAO, registrationDAO, registrationPanel));
             tabbedPane.addTab("Courses", new coursePanel(courseDAO, registrationDAO, registrationPanel));
             tabbedPane.addTab("Registrations", registrationPanel);
 
