@@ -102,28 +102,42 @@ public class RegistrationPanel extends JPanel {
             }
         });
 
-          exportStudentButton.addActionListener(e -> {
-            Student selectedStudent = (Student) studentComboBox.getSelectedItem();
+    exportStudentButton.addActionListener(e -> {
+    int selectedRow = table.getSelectedRow();
 
-            if (selectedStudent == null) {
-                JOptionPane.showMessageDialog(this, "Please select a student from the dropdown.");
-                return;
+    if (selectedRow == -1) {
+        JOptionPane.showMessageDialog(this, "Please select a row in the table.");
+        return;
+    }
+
+    String studentName = (String) tableModel.getValueAt(selectedRow, 0);
+
+    try {
+        Student selectedStudent = null;
+        for (Student s : studentDAO.getAllStudents()) {
+            if (s.getName().equals(studentName)) {
+                selectedStudent = s;
+                break;
             }
+        }
 
-            int studentId = selectedStudent.getStudentId();
+        if (selectedStudent == null) {
+            JOptionPane.showMessageDialog(this, "Student not found.");
+            return;
+        }
 
-            try {
-                
-                List<Course> courses = registrationDAO.getCoursesByStudentId(studentId);
+        int studentId = selectedStudent.getStudentId();
 
-                Exporter.exportStudentWithCourses(selectedStudent, courses);
+        List<Course> courses = registrationDAO.getCoursesByStudentId(studentId);
 
-                JOptionPane.showMessageDialog(this, "Exported to student_" + studentId + ".txt successfully.");
-            } catch (Exception ex) {
-                ex.printStackTrace();
-                JOptionPane.showMessageDialog(this, "Export failed: " + ex.getMessage());
-            }
-        });
+        Exporter.exportStudentWithCourses(selectedStudent, courses);
+
+        JOptionPane.showMessageDialog(this, "Exported to student_" + studentId + ".txt successfully.");
+    } catch (Exception ex) {
+        ex.printStackTrace();
+        JOptionPane.showMessageDialog(this, "Export failed: " + ex.getMessage());
+    }
+});
 
         deleteButton.addActionListener(e -> {
             int selectedRow = table.getSelectedRow();
